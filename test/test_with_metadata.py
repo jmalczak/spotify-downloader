@@ -1,3 +1,4 @@
+import httpretty
 import os
 
 from spotdl import const
@@ -10,6 +11,7 @@ from spotdl import spotdl
 
 import loader
 
+MOCK_RESP_DIR = os.path.join('test', 'responses')
 loader.load_defaults()
 
 TRACK_URL = "https://open.spotify.com/track/2nT5m433s95hvYJH4S7ont"
@@ -36,7 +38,26 @@ class TestFileFormat:
         assert title == EXPECTED_TITLE.replace(" ", "_")
 
 
+def _mock_youtube_search_page():
+    search_query = youtube_tools.GenerateYouTubeURL(
+                        TRACK_URL,
+                        meta_tags).search_query
+    search_url = youtube_tools.generate_search_url(search_query)
+
+    search_resp = os.path.join(MOCK_RESP_DIR, 'search.response')
+    with open(search_resp, 'rb') as raw_resp:
+        response_text = raw_resp.read()
+
+    httpretty.register_uri(
+        httpretty.GET,
+        search_url,
+        body=response_text
+    )
+
+
+@httpretty.activate
 def test_youtube_url():
+    _mock_youtube_search_page()
     url = youtube_tools.generate_youtube_url(TRACK_URL, meta_tags)
     assert url == EXPECTED_YT_URL
 
