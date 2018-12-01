@@ -35,13 +35,17 @@ def match_args():
             )
             list_dl.download_list()
     elif const.args.playlist:
-        spotify_tools.write_playlist(playlist_url=const.args.playlist)
+        spotify_tools.write_playlist(playlist_url=const.args.playlist,
+                        text_file=const.args.write_tracks_to)
     elif const.args.album:
-        spotify_tools.write_album(album_url=const.args.album)
+        spotify_tools.write_album(album_url=const.args.album,
+                        text_file=const.args.write_tracks_to)
     elif const.args.all_albums:
-        spotify_tools.write_all_albums_from_artist(artist_url=const.args.all_albums)
+        spotify_tools.write_all_albums_from_artist(artist_url=const.args.all_albums,
+                        text_file=const.args.write_tracks_to)
     elif const.args.username:
-        spotify_tools.write_user_playlist(username=const.args.username)
+        spotify_tools.write_user_playlist(username=const.args.username,
+                        text_file=const.args.write_tracks_to)
 
 
 def main():

@@ -14,6 +14,8 @@ _LOG_LEVELS_STR = ["INFO", "WARNING", "ERROR", "DEBUG"]
 
 default_conf = {
     "spotify-downloader": {
+        "write-tracks-to": None,
+        "write-m3u": None,
         "manual": False,
         "no-metadata": False,
         "avconv": False,
@@ -105,27 +107,40 @@ def get_arguments(raw_args=None, to_group=True, to_merge=True):
         group.add_argument(
             "-p",
             "--playlist",
-            help="load tracks from playlist URL into <playlist_name>.txt",
+            help="load tracks from playlist URL into <playlist_name>.txt "
+                 "or as specified with --write-tracks-to argument",
         )
         group.add_argument(
-            "-b", "--album", help="load tracks from album URL into <album_name>.txt"
+            "-b",
+            "--album",
+            help="load tracks from album URL into <album_name>.txt "
+                 "or as specified with --write-tracks-to argument"
         )
         group.add_argument(
             "-ab",
             "--all-albums",
-            help="load all tracks from artist URL into <artist_name>.txt"
+            help="load all tracks from artist URL into <artist_name>.txt "
+                 "or as specified with --write-tracks-to argument"
         )
         group.add_argument(
             "-u",
             "--username",
-            help="load tracks from user's playlist into <playlist_name>.txt",
+            help="load tracks from user's playlist into <playlist_name>.txt "
+                 "or as specified with --write-tracks-to argument",
         )
         group.add_argument(
             "-V", "--version", help="show version and exit", action="store_true"
         )
 
     parser.add_argument(
+        "--write-tracks-to",
+        default=config["write-tracks-to"],
+        help="force writing tracks to this file when using one of "
+             "--playlist, --album, etc. for writing tracks to file",
+    )
+    parser.add_argument(
         '--write-m3u',
+        default=config["write-m3u"],
         help="generate an .m3u playlist file with youtube links given "
              "a text file containing tracks",
         action='store_true'
@@ -246,13 +261,14 @@ def get_arguments(raw_args=None, to_group=True, to_merge=True):
         "-sk",
         "--skip",
         default=config["skip"],
-        help="path to file containing tracks to skip",
+        help="path to file containing tracks to skip downloading",
     )
     parser.add_argument(
         "-w",
         "--write-successful",
         default=config["write-successful"],
-        help="path to file to write successful tracks to",
+        help="path to file to write successfully downloaded tracks to "
+             "can be same file as --skip",
     )
     parser.add_argument(
         "-c", "--config", default=None, help="path to custom config.yml file"
