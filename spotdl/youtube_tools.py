@@ -186,10 +186,10 @@ class GenerateYouTubeURL:
             if result is None:
                 return None
         else:
-            if const.args.strict_match:
-                videos = list(filter(lambda v: all(map(lambda p: p in v["title"].lower(), self.raw_song.lower().split())) , videos))
-
             if not self.meta_tags:
+                if const.args.strict_match:
+                    searchTokens = self.raw_song.lower().split()
+                    videos = list(filter(lambda v: all(map(lambda p: p in v["title"].lower(), searchTokens)) , videos))
                 # if the metadata could not be acquired, take the first result
                 # from Youtube because the proper song length is unknown
                 result = videos[0]
@@ -197,6 +197,9 @@ class GenerateYouTubeURL:
                     "Since no metadata found on Spotify, going with the first result"
                 )
             else:
+                searchTokens = [self.meta_tags["name"].lower(), self.meta_tags["artists"][0]["name"].lower()] 
+                videos = list(filter(lambda v: all(map(lambda p: p in v["title"].lower(), searchTokens)) , videos))
+
                 # filter out videos that do not have a similar length to the Spotify song
                 duration_tolerance = 10
                 max_duration_tolerance = 20
