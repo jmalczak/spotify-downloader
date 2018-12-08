@@ -186,6 +186,9 @@ class GenerateYouTubeURL:
             if result is None:
                 return None
         else:
+            if const.args.strict_match:
+                videos = list(filter(lambda v: all(map(lambda p: p in v["title"].lower(), self.raw_song.lower().split())) , videos))
+
             if not self.meta_tags:
                 # if the metadata could not be acquired, take the first result
                 # from Youtube because the proper song length is unknown

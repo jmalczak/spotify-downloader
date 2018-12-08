@@ -32,6 +32,7 @@ default_conf = {
         "skip": None,
         "write-successful": None,
         "log-level": "INFO",
+        "strict-match": False
     }
 }
 
@@ -259,6 +260,13 @@ def get_arguments(raw_args=None, to_group=True, to_merge=True):
     )
     parser.add_argument(
         "-c", "--config", default=None, help="path to custom config.yml file"
+    )
+    parser.add_argument(
+        "-sm",
+        "--strict-match",
+        default=config["strict-match"],
+        help="return only results that strictly match search criteria",
+        action="store_true"
     )
 
     parsed = parser.parse_args(raw_args)
